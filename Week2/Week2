@@ -1,0 +1,79 @@
+#!/usr/bin/python3.5 
+
+# Imort packages 
+
+import numpy as np 
+import matplotlib.pyplot as plt 
+from keras import datasets 
+
+( x_train, y_train ), ( x_test, y_test ) = datasets.mnist.load_data() 
+
+# Check out the data 
+print( "The shape is: {}, the length is {}.".format( x_train[223].shape, len(x_train)) )
+
+
+# reshape the input 
+import keras 
+x_train = x_train.reshape( 60000, 784 ) 
+x_test = x_test.reshape( 10000, 784 ) 
+
+
+# one-hot encoding output 
+from keras.utils import np_utils
+y_train = np_utils.to_categorical( y_train, 10 ) 
+y_test = np_utils.to_categorical( y_test, 10 ) 
+
+
+# ---------- Build Model ---------- #
+from keras.models import Sequential 
+from keras.layers import Dense, Activation 
+from keras.optimizers import SGD 
+model = Sequential( ) 
+# First Hidden layer 
+model.add( Dense( 500, input_dim = 784 ) ) 
+model.add( Activation("sigmoid") ) 
+# Second Hidden layer 
+model.add( Dense( 500 ) ) 
+model.add( Activation("sigmoid") ) 
+# Output layer 
+model.add( Dense( 10 ) ) 
+model.add( Activation("softmax") ) 
+
+
+# ---------- Compile Model ---------- #
+model.compile( loss="mse", optimizer = SGD(lr=0.1), metrics = ["accuracy"] ) 
+
+
+# Model Summary 
+model.summary() 
+'''
+	First hidden layers has 784*500+500 = 398500 Param.
+	Second hiiden layers has 500*500+500 = 250500 Param.
+	Output layers has 500*10+10 = 5010 Param.
+'''
+
+
+# ---------- Training Model ---------- #
+model.fit( x_train, y_train, batch_size = 100, epochs = 20 ) 
+
+
+
+# ---------- Evaluate Model ---------- #
+predict = model.predict_classes( x_test ) 
+
+index = int( input( ">> An index " ) ) 
+def test( index ):
+	plt.imshow( x_test[index].reshape(28,28), cmap="Greys" ) 
+	print( "The real result is ", predict[index] ) 
+	plt.show( ) 
+
+test( index ) 
+
+
+
+# ---------- Package Model ---------- #
+model_json = model.to_json( ) 
+open("handwriting_modelarchitecture.json", 'w' ).write( model_json ) 
+model.save_weights( "handwriting_model_weights.h5" ) 
+
+
