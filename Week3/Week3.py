@@ -126,5 +126,5 @@ for i in range(5):
 	plt.title( predict[pick[i]] ) 
 	plt.axis("off") 
 
-
+plt.show()
 
