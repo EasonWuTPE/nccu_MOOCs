@@ -21,31 +21,33 @@ y_test = np_utils.to_categorical( y_test, 10 )
 
 from keras.models import Sequential 
 from keras.layers import Dense, Activation, Flatten, Conv2D, MaxPooling2D 
-from keras.optimizers import SGD 
+from keras.optimizers import SGD, RMSprop, Adagrad, Adam
 
 
 # Hyperparameters 
-filters_1 = 8
+filters_1 = 16
 activation_ = "relu" 
-layer_CNNnum = 3
+layer_CNNnum = 2
 layer_FCNnum = 2
-FCN_Dense = 250
+FCN_Dense = 150
 loss_ = "categorical_crossentropy" 
-BatchSize = 150
-Epoch = 8
+BatchSize = 120
+optimizer_ = Adagrad(lr=0.0005, epsilon=None, decay=0.0)
+lr_ = 0.001
+Epoch = 15
 
 #---------- Build Model ---------- #
 # First CNN Layers
 model = Sequential() 
-model.add( Conv2D( filters_1, (4,4), padding = "same", input_shape = (28,28,1) ) ) 
+model.add( Conv2D( filters_1, (3,3), padding = "same", input_shape = (28,28,1) ) ) 
 model.add( Activation( activation_ ) ) 
-model.add( MaxPooling2D( pool_size = (3,3) ) ) 
+model.add( MaxPooling2D( pool_size = (2,2) ) ) 
 
 for l in range( 1, layer_CNNnum ):
 	l *= 2
-	model.add( Conv2D( filters_1*l, (4,4), padding = "same" ) ) 
+	model.add( Conv2D( filters_1*l, (3,3), padding = "same" ) ) 
 	model.add( Activation( activation_ ) ) 
-	model.add( MaxPooling2D( pool_size = (3,3) ) )  
+	model.add( MaxPooling2D( pool_size = (2,2) ) )  
 
 '''
 model.add( Conv2D( filters_1*4, (4,4), padding = "same" ) ) 
@@ -68,7 +70,7 @@ model.add( Activation( 'softmax' ) )
 
 
 #---------- Compile Model ---------- #
-model.compile( loss=loss_, optimizer = SGD(lr=0.05), metrics=["accuracy"] ) 
+model.compile( loss=loss_, optimizer = optimizer_, metrics=["accuracy"] ) 
 
 # Model Summary 
 model.summary() 
@@ -94,5 +96,3 @@ for i in range(5):
 	plt.axis("off") 
 
 plt.show()
-
-
