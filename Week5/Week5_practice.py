@@ -71,7 +71,7 @@ NewFCLayer = [ Flatten(),
 
 model_0to1 = Sequential( ConvLayer + NewFCLayer ) 
 for layer in ConvLayer: 
-    layer.x_trainable = False 
+    layer.trainable = False 
 
 model_0to1.summary() 
 
@@ -82,6 +82,6 @@ model_0to1.compile( loss = "mse", optimizer = SGD(lr=0.05), metrics = ["accuracy
 # ----- Training Model ----- #
 model_0to1.fit( x_train_01, y_train_01, epochs = 5, batch_size = 100 ) 
 
-score = model.evaluate( x_test_01, y_test_01 ) 
+score = model_0to1.evaluate( x_test_01, y_test_01 ) 
 
 print( "The loss is %f, the accuracy is %f." %( score[0], score[1] ) ) 
