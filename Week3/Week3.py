@@ -116,6 +116,7 @@ model_json = model.to_json()
 open( "handwriting_model_cnn.json", 'w' ).write( model_json ) 
 model.save_weights("handwriting_weights_cnn.h5") 
 
+'''
 # Check the result 
 predict = model.predict_classes( x_test ) 
 
@@ -127,4 +128,4 @@ for i in range(5):
 	plt.axis("off") 
 
 plt.show()
-
+'''
